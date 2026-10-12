@@ -1,0 +1,299 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+import role from "../assets/equiteam/f-role.png";
+import biodata from "../assets/equiteam/f-biodata.png";
+import dashboard from "../assets/equiteam/f-dashboard.png";
+import newClass from "../assets/equiteam/f-new-class.png";
+import newTask from "../assets/equiteam/f-new-task.png";
+import classPage from "../assets/equiteam/f-class.png";
+import taskStatus from "../assets/equiteam/f-task-status.png";
+import quizSkill from "../assets/equiteam/f-quiz-skill.png";
+import quizPref from "../assets/equiteam/f-quiz-pref.png";
+import quizPersonality from "../assets/equiteam/f-quiz-personality.png";
+import answers from "../assets/equiteam/f-answers.png";
+import student from "../assets/equiteam/f-student.png";
+import groups from "../assets/equiteam/f-groups.png";
+import analysis from "../assets/equiteam/it1-analysis.png";
+import chart from "../assets/equiteam/it2-chart.png";
+import mbti from "../assets/equiteam/it1-mbti.png";
+import profile from "../assets/equiteam/f-profile.png";
+import profileEdit from "../assets/equiteam/f-profile-edit.png";
+
+import mLecturer from "../assets/equiteam/m-orange.png";
+import mStudent from "../assets/equiteam/m-green.png";
+import mBoth from "../assets/equiteam/m-blue.png";
+import mPurple from "../assets/equiteam/m-purple.png";
+
+type Who = "Lecturer" | "Student" | "Both";
+type Shot = { src: ImageMetadata; label: string; tall?: boolean };
+type Feature = {
+  id: string;
+  title: string;
+  who: Who;
+  reqs: string[];
+  job: string; // the user's job-to-be-done
+  what: string[];
+  decision: string; // the design call, shown on a sticky note
+  shots: Shot[];
+};
+
+// Grouped from the 19 functional requirements (F-01 to F-19) in the EquiTeam design document,
+// ordered along the real classroom flow: set up → collect → form → understand.
+const features: Feature[] = [
+  {
+    id: "onboarding",
+    title: "Role-based onboarding",
+    who: "Both",
+    reqs: ["F-01", "F-05", "NF-02", "NF-03"],
+    job: "Get into the right workspace in under a minute.",
+    what: [
+      "Google sign-in, so nobody manages yet another password",
+      "Pick a role, lecturer (Dosen) or student (Mahasiswa), with a mascot for each",
+      "A short profile: name, NIM or NIP, gender (one of Edu2Com's inputs)",
+      "Indonesian and English everywhere, via the ID/EN toggle",
+    ],
+    decision: "Gender is collected once in the profile, not in each questionnaire. Edu2Com needs it for team balance, but it doesn't change between tasks, so students only answer it once.",
+    shots: [
+      { src: role, label: "Pilih role kamu" },
+      { src: biodata, label: "Isi data diri" },
+    ],
+  },
+  {
+    id: "setup",
+    title: "Class & task setup",
+    who: "Lecturer",
+    reqs: ["F-06", "F-07"],
+    job: "Describe what a good team needs, in the lecturer's own terms.",
+    what: [
+      "Dashboard summarising tasks created and teams formed",
+      "Create a class: course, code, year, semester and term",
+      "Create a task with the skills it requires and the topics students can prefer",
+      "These skills and topics become Edu2Com's task model: required competencies and team size",
+    ],
+    decision: "Skills and topics are added as removable chips rather than free text, so the algorithm gets clean, comparable inputs without the lecturer learning its vocabulary.",
+    shots: [
+      { src: dashboard, label: "Dashboard" },
+      { src: newClass, label: "Buat kelas baru" },
+      { src: newTask, label: "Buat tugas baru" },
+    ],
+  },
+  {
+    id: "collect",
+    title: "Questionnaire & sharing",
+    who: "Lecturer",
+    reqs: ["F-08", "F-09", "F-10", "F-11"],
+    job: "Collect structured input from the whole class without chasing anyone.",
+    what: [
+      "Build a questionnaire per task, reusing questions from earlier ones",
+      "Share one link with the class",
+      "Live status per task: not started, 32 of 42 answered, ready to group, grouped",
+      "Full class roster beside every task",
+    ],
+    decision: "Task status is written as a sentence (\"32 of 42 students have answered\") instead of a progress icon, so the lecturer knows exactly when it's safe to run grouping.",
+    shots: [
+      { src: classPage, label: "Class page · share link + roster" },
+      { src: taskStatus, label: "Task status" },
+    ],
+  },
+  {
+    id: "quiz",
+    title: "Student questionnaire",
+    who: "Student",
+    reqs: ["F-17", "F-18"],
+    job: "Answer honestly and quickly, without it feeling like a test.",
+    what: [
+      "Three short parts: skill self-rating, topic preference and a personality test (MBTI)",
+      "Answers on a five-step scale drawn with mascot faces, from Sangat Tidak Setuju to Sangat Setuju",
+      "Skill levels named in plain words: Pemula to Jago Banget",
+      "Students can see their own result afterwards",
+    ],
+    decision: "\"Input forms are too long\" was a key student frustration, so each part fits one screen and uses taps, not typing. The mascot scale makes a 5-point Likert feel playful instead of clinical.",
+    shots: [
+      { src: quizSkill, label: "Tes Keahlian", tall: true },
+      { src: quizPref, label: "Preferensi Topik", tall: true },
+      { src: quizPersonality, label: "Tes Kepribadian", tall: true },
+    ],
+  },
+  {
+    id: "review",
+    title: "Answer review",
+    who: "Lecturer",
+    reqs: ["F-12"],
+    job: "Check what each student said before trusting the algorithm with it.",
+    what: [
+      "Per-student answers across personality, skill and preference tabs",
+      "Student profile card with MBTI type, skill bars and a personality summary",
+      "Remove students who dropped the course before grouping",
+    ],
+    decision: "Trust and reliability was one of the five key research findings. Letting lecturers inspect raw answers first makes the algorithm's output something they can check, not just accept.",
+    shots: [
+      { src: answers, label: "Jawaban mahasiswa" },
+      { src: student, label: "Profil mahasiswa" },
+    ],
+  },
+  {
+    id: "form",
+    title: "AI team formation",
+    who: "Lecturer",
+    reqs: ["F-13", "F-15", "F-16"],
+    job: "Turn a class into balanced teams in one click, and still be in charge.",
+    what: [
+      "One button sends the class and task model to Edu2Com",
+      "Teams come back with a quality score and their assigned topic",
+      "Lecturers can move members between teams, rerun grouping or export the result",
+      "Every student gets a team, and the screen confirms it (100% assigned)",
+    ],
+    decision: "The algorithm proposes and the lecturer decides. Manual editing stays one click away, and a quality score on each team keeps the trade-off visible when they override it.",
+    shots: [{ src: groups, label: "Kelompok 01–04 with quality score" }],
+  },
+  {
+    id: "analysis",
+    title: "Group quality analysis",
+    who: "Both",
+    reqs: ["F-02", "F-03", "F-14"],
+    job: "See why the teams are fair, not just be told they are.",
+    what: [
+      "Personality spread across all 16 MBTI types, drawn with the mascot icons",
+      "Average skill per role (UI/UX, frontend, backend, QA, PM)",
+      "Topic preference and gender split as donut charts",
+      "Hover any bar for exact numbers (added after testing round 2)",
+    ],
+    decision: "\"Equity had to be visible.\" These charts were added after round 1, when testers could form teams but couldn't explain why they were balanced.",
+    shots: [
+      { src: analysis, label: "Lihat analisis jawaban" },
+      { src: chart, label: "Hover states (iteration 2)" },
+    ],
+  },
+  {
+    id: "me",
+    title: "Personality & profile",
+    who: "Student",
+    reqs: ["F-04", "F-19"],
+    job: "Understand myself as a teammate, and where I ended up.",
+    what: [
+      "Own MBTI result as a mascot, with a readable explanation (e.g. ENFP, The Campaigner)",
+      "Browse all 16 types and what they bring to a team",
+      "History of past group assignments",
+      "Edit profile and change password",
+    ],
+    decision: "Aprilianda's quote drove this one: \"If a system groups me, I want to know why I ended up there.\" The profile turns her test result into something she can take into the team.",
+    shots: [
+      { src: profile, label: "Profil · ENFP" },
+      { src: mbti, label: "Persebaran MBTI" },
+      { src: profileEdit, label: "Edit profil" },
+    ],
+  },
+];
+
+const whoStyle: Record<Who, { pill: string; m: ImageMetadata; label: string }> = {
+  Lecturer: { pill: "bg-[#fff4dc] text-[#b54708]", m: mLecturer, label: "Lecturer" },
+  Student: { pill: "bg-[#e3f8ec] text-[#067647]", m: mStudent, label: "Student" },
+  Both: { pill: "bg-[#e3f1ff] text-[#175cd3]", m: mBoth, label: "Lecturer + student" },
+};
+
+const lanes: { who: Who; title: string }[] = [
+  { who: "Lecturer", title: "Lecturer" },
+  { who: "Student", title: "Student" },
+];
+const stepOf = (id: string) => features.findIndex((f) => f.id === id) + 1;
+---
+
+<section class="eq-dots border-t border-[#d6e9f8] py-20 sm:py-28" id="features">
+  <div class="wrap">
+    <h2 class="eq-title text-[clamp(2rem,5vw,3.6rem)]" data-reveal>Key <span class="y">Features</span></h2>
+    <p class="mt-6 max-w-3xl text-lg text-muted" data-reveal="0.1">
+      The 19 functional requirements group into eight features. They follow a real semester,
+      from setting up a class to understanding why a team is balanced. Each one lists the
+      requirement codes it covers and the design decision behind it.
+    </p>
+
+    <!-- Feature map: the whole flow at a glance, by role -->
+    <div class="eq-select mt-12 rounded-sm p-5 text-[#0277c7] sm:p-7" data-reveal>
+      <span class="h"></span><span class="h"></span><span class="h"></span><span class="h"></span>
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <span class="eq-tag bg-[#e3f1ff] text-[#175cd3]"><Image src={mPurple} alt="" widths={[100]} />Feature map</span>
+        <span class="text-sm font-medium text-muted">Tap a feature to jump to it</span>
+      </div>
+      <div class="mt-6 space-y-4 text-ink">
+        {lanes.map((lane) => (
+          <div class="grid gap-3 lg:grid-cols-[9rem_1fr] lg:items-center">
+            <span class={`eq-tag w-fit ${whoStyle[lane.who].pill}`}><Image src={whoStyle[lane.who].m} alt="" widths={[100]} />{lane.title}</span>
+            <ol class="flex flex-wrap items-center gap-2">
+              {features
+                .filter((f) => f.who === lane.who || f.who === "Both")
+                .map((f, i, arr) => (
+                  <>
+                    <li>
+                      <a href={`#ef-${f.id}`} class="flex min-h-11 items-center gap-2 rounded-2xl bg-white px-3 py-2 text-sm font-semibold shadow-[0_6px_14px_-8px_rgb(2_80_152/0.45)] ring-1 ring-[#d6e9f8] transition-transform hover:-translate-y-0.5 hover:ring-[#0277c7]">
+                        <span class="grid size-6 place-items-center rounded-full bg-[#fec84b] text-xs font-bold text-[#0b2a55]">{stepOf(f.id)}</span>
+                        {f.title}
+                      </a>
+                    </li>
+                    {i < arr.length - 1 && <li class="text-[#0277c7]" aria-hidden="true">→</li>}
+                  </>
+                ))}
+            </ol>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature detail -->
+  <div class="wrap mt-6">
+    {features.map((f, i) => {
+      const w = whoStyle[f.who];
+      const tall = f.shots.every((s) => s.tall);
+      return (
+        <article id={`ef-${f.id}`} class="scroll-mt-28 border-b-2 border-dashed border-[#d6e9f8] py-16 last:border-b-0 sm:py-20">
+          <div class={`grid gap-10 lg:items-start ${i % 2 ? "lg:grid-cols-[1.35fr_1fr]" : "lg:grid-cols-[1fr_1.35fr]"}`}>
+            <div class={`${i % 2 ? "lg:order-2" : ""} lg:sticky lg:top-28`} data-reveal>
+              <div class="flex flex-wrap items-center gap-3">
+                <span class="grid size-12 place-items-center rounded-2xl bg-[#fec84b] text-xl font-extrabold text-[#0b2a55] shadow-[0_5px_0_#e0a52a]">{i + 1}</span>
+                <span class={`eq-tag ${w.pill}`}><Image src={w.m} alt="" widths={[100]} />{w.label}</span>
+              </div>
+              <h3 class="mt-5 text-3xl font-extrabold tracking-tight text-[#0b2a55]">{f.title}</h3>
+              <p class="mt-2 text-lg font-medium text-[#0277c7]">{f.job}</p>
+
+              <ul class="mt-6 space-y-2.5">
+                {f.what.map((x) => (
+                  <li class="flex gap-3 text-base">
+                    <span class="mt-2 size-2 shrink-0 rounded-full bg-[#0277c7]" />
+                    {x}
+                  </li>
+                ))}
+              </ul>
+
+              <div class="mt-6 flex flex-wrap gap-1.5" aria-label="Requirements covered">
+                {f.reqs.map((r) => (
+                  <code class="rounded-lg bg-white px-2 py-1 text-xs font-semibold text-[#175cd3] ring-1 ring-[#d6e9f8]">{r}</code>
+                ))}
+              </div>
+
+              <p class="eq-sticky mt-8 rotate-[-1.2deg] rounded-sm p-5 text-base font-medium">
+                <span class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#175cd3]">Design decision</span>
+                {f.decision}
+              </p>
+            </div>
+
+            <div class={`${i % 2 ? "lg:order-1" : ""} ${tall ? "grid grid-cols-3 gap-3" : f.shots.length === 1 ? "" : "grid gap-5 sm:grid-cols-2"}`} data-stagger>
+              {f.shots.map((s, k) => (
+                <figure class={!tall && f.shots.length === 3 && k === 0 ? "sm:col-span-2" : ""}>
+                  <div class="eq-window overflow-hidden">
+                    <div class="flex items-center gap-1.5 border-b border-[#e9eaeb] bg-[#f8fafc] px-3 py-2" aria-hidden="true">
+                      <span class="size-2.5 rounded-full bg-[#f04438]/70" /><span class="size-2.5 rounded-full bg-[#fec84b]" /><span class="size-2.5 rounded-full bg-[#3ccf7d]/80" />
+                    </div>
+                    <Image src={s.src} alt={`${f.title}: ${s.label}`} widths={[600, 1000]} sizes="(min-width:1024px) 40vw, 100vw" class="block w-full bg-white" />
+                  </div>
+                  <figcaption class="mt-2 text-sm font-medium text-muted">{s.label}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+</section>

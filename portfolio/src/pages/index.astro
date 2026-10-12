@@ -1,0 +1,238 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import SiaCover from "../components/SiaCover.astro";
+import TeachCover from "../components/TeachCover.astro";
+import SatyaCover from "../components/SatyaCover.astro";
+import EquiCover from "../components/EquiCover.astro";
+import Sparkle from "../components/Sparkle.astro";
+import Cursor from "../components/Cursor.astro";
+import { site, projects } from "../data/site";
+import worksheet from "../assets/sia/worksheet.png";
+import access from "../assets/sia/user-request-access.png";
+
+const covers = { sia: SiaCover, teachtechai: TeachCover, satya: SatyaCover, equiteam: EquiCover };
+
+const process = [
+  { n: "01", t: "Understand", d: "Sit with the people doing the work. Map roles, files and the hand-offs between them." },
+  { n: "02", t: "Specify", d: "Turn it into requirements everyone can sign off: modules, numbered specs, access rules." },
+  { n: "03", t: "Wireframe", d: "Low-fi flows to agree on structure before anyone argues about colour." },
+  { n: "04", t: "Systemise", d: "Tokens, type and components so fifty screens still feel like one product." },
+  { n: "05", t: "Prototype", d: "Hi-fi, clickable, with the edge cases: errors, empty states, permissions." },
+];
+
+const skills = ["UX Research", "Requirements (SRS)", "Information Architecture", "Design Systems", "Prototyping", "Data-heavy UI"];
+---
+
+<Base>
+  <!-- HERO -->
+  <section class="relative isolate overflow-hidden pt-28 sm:pt-32">
+    <div
+      class="absolute -left-40 bottom-0 -z-10 size-[42rem] rounded-full bg-violet/25 blur-[120px]"
+      aria-hidden="true"
+    >
+    </div>
+    <div
+      class="absolute -right-32 top-24 -z-10 size-[26rem] rounded-full bg-lime/50 blur-[110px]"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="wrap">
+      <div class="flex items-center justify-between text-sm">
+        {
+          site.available ? (
+            <span class="pill bg-card ring-1 ring-line">
+              <span class="relative flex size-2">
+                <span class="absolute inline-flex size-full animate-ping rounded-full bg-ok/60" />
+                <span class="relative inline-flex size-2 rounded-full bg-ok" />
+              </span>
+              Available for work
+            </span>
+          ) : (
+            <span />
+          )
+        }
+        <span class="font-display font-bold text-muted">Portfolio ©2026</span>
+      </div>
+
+      <h1
+        class="display mt-10 text-[clamp(3.75rem,15vw,13.5rem)] [&>span]:inline-block"
+        data-intro
+      >
+        <span>Product</span>
+        <br class="hidden sm:block" />
+        <span class="relative">
+          designer
+          <Sparkle class="absolute -right-[0.35em] -top-[0.1em] size-[0.32em] text-violet" />
+        </span>
+      </h1>
+
+      <div class="mt-14 grid gap-8 md:grid-cols-[1.1fr_1fr] md:items-end">
+        <p class="max-w-xl text-lg leading-relaxed text-muted sm:text-xl" data-reveal="0.3">
+          I'm <strong class="font-semibold text-ink">{site.name}</strong>, a {site.role} in {site.location}.
+          I design (and build) calm interfaces for complicated things, from audit
+          worksheets to an AI coach for teachers.
+        </p>
+        <div class="flex flex-wrap gap-3 md:justify-end" data-reveal="0.4">
+          <a
+            href="#work"
+            class="btn btn-primary"
+          >
+            See the work
+          </a>
+          <a
+            href={`mailto:${site.email}`}
+            class="btn btn-secondary"
+          >
+            {site.email}
+          </a>
+        </div>
+      </div>
+
+      <!-- stage -->
+      <div class="relative mx-auto mt-16 max-w-5xl pb-24 sm:mt-20" data-reveal="0.5">
+        <div class="shot overflow-hidden" data-parallax="-60">
+          <Image
+            src={worksheet}
+            alt="SIA worksheet screen with colour-coded mapping, adjustment and audit columns"
+            widths={[800, 1400, 2000]}
+            sizes="(min-width: 1024px) 1024px, 100vw"
+            class="block h-auto w-full"
+            loading="eager"
+          />
+        </div>
+
+        <div
+          class="shot absolute -right-2 -top-10 hidden w-[34%] overflow-hidden sm:block md:-right-12"
+          data-float="12"
+        >
+          <Image src={access} alt="Request access dialog" widths={[400, 700]} sizes="34vw" class="block w-full" />
+        </div>
+
+        <span
+          data-float="8"
+          class="pill absolute -left-2 top-[18%] bg-lime px-4 py-2.5 text-sm font-semibold text-ink shadow-xl md:-left-10"
+        >
+          ✓ Debit = Credit
+        </span>
+        <span
+          data-float="10"
+          class="pill absolute bottom-[22%] right-[6%] bg-ink px-4 py-2.5 text-sm text-paper shadow-xl"
+        >
+          16 modules · 4 roles
+        </span>
+        <Cursor label="Auditor" tone="violet" class="absolute left-[30%] top-[62%] hidden sm:flex" />
+        <Cursor label="Client" tone="ink" class="absolute right-[30%] top-[8%] hidden sm:flex" />
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILL STRIP -->
+  <section class="border-y border-line bg-card" aria-label="Skills">
+    <ul class="wrap flex flex-wrap items-center justify-center gap-x-8 gap-y-3 py-6 font-display text-sm font-bold sm:text-base" data-stagger>
+      {
+        skills.map((s, i) => (
+          <li class="flex items-center gap-8">
+            {i > 0 && <Sparkle class="-ml-4 size-3 text-violet" />}
+            {s}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- WORK -->
+  <section id="work" class="wrap scroll-mt-24 py-24 sm:py-32">
+    <div class="flex items-end justify-between gap-6">
+      <h2 class="h2" data-reveal>Selected work</h2>
+      <span class="font-display text-lg font-bold text-muted">({String(projects.length).padStart(2, "0")})</span>
+    </div>
+
+    <div class="mt-12 grid gap-x-6 gap-y-14 lg:grid-cols-2">
+      {
+        projects.map((p, i) => {
+          const Cover = covers[p.slug as keyof typeof covers];
+          return (
+            <a href={`/work/${p.slug}`} class="group block [perspective:1200px]" data-reveal={i * 0.1}>
+              <div data-tilt>
+                <Cover />
+              </div>
+              <div class="mt-5 flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <h3 class="font-display text-2xl font-extrabold tracking-tight">
+                    {p.title} <span class="font-medium text-muted">· {p.full}</span>
+                  </h3>
+                  <p class="mt-2 max-w-lg text-muted">{p.blurb}</p>
+                </div>
+                <span class="pill bg-ink text-paper transition-transform group-hover:translate-x-1">
+                  Read case study →
+                </span>
+              </div>
+            </a>
+          );
+        })
+      }
+      {
+        projects.length % 2 === 1 && (
+          <a
+            href={`mailto:${site.email}`}
+            class="group flex aspect-[4/3] flex-col justify-between rounded-[28px] border-2 border-dashed border-line p-8 transition-colors hover:border-ink"
+            data-reveal="0.2"
+          >
+            <span class="pill w-fit bg-paper text-muted ring-1 ring-line">More on request</span>
+            <div>
+              <p class="font-display text-3xl font-extrabold tracking-tight">Want the full files?</p>
+              <p class="mt-3 text-muted">Figma, research decks and test results are happy to travel. Just ask.</p>
+              <span class="pill mt-6 bg-ink text-paper transition-transform group-hover:translate-x-1">Email me →</span>
+            </div>
+          </a>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- ABOUT / PROCESS -->
+  <section id="about" class="scroll-mt-24 bg-ink py-24 text-paper sm:py-32">
+    <div class="wrap grid gap-16 lg:grid-cols-[1fr_1.2fr]">
+      <div>
+        <p class="eyebrow !text-lime">How I work</p>
+        <h2 class="h2 mt-4" data-reveal>Clear before clever.</h2>
+        <p class="mt-6 max-w-md text-lg leading-relaxed text-paper/65" data-reveal="0.1">
+          Most of my work starts in spreadsheets and requirement docs, not Dribbble shots. I like
+          untangling who does what, then making the screen reflect it.
+        </p>
+      </div>
+      <ol class="divide-y divide-white/10 border-y border-white/10" data-stagger>
+        {
+          process.map((s) => (
+            <li class="grid grid-cols-[3rem_1fr] gap-4 py-6 sm:grid-cols-[4rem_10rem_1fr]">
+              <span class="font-display font-bold text-lime">{s.n}</span>
+              <span class="font-display text-xl font-extrabold">{s.t}</span>
+              <span class="col-start-2 text-paper/65 sm:col-start-auto">{s.d}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="wrap scroll-mt-24 py-24 sm:py-32">
+    <div class="relative isolate overflow-hidden rounded-[32px] bg-lime px-6 py-16 sm:px-14 sm:py-24" data-reveal>
+      <Sparkle class="absolute right-10 top-10 size-10 text-ink" />
+      <Sparkle class="absolute right-24 top-24 size-4 text-violet" />
+      <p class="eyebrow !text-ink/60">Contact</p>
+      <h2 class="display mt-4 text-[clamp(3rem,9vw,8rem)]">
+        Got a messy<br />system?
+      </h2>
+      <p class="mt-6 max-w-md text-lg text-ink/70">Let's make it make sense. I reply within a day or two.</p>
+      <a
+        href={`mailto:${site.email}`}
+        class="btn btn-primary mt-10"
+      >
+        {site.email} →
+      </a>
+    </div>
+  </section>
+</Base>

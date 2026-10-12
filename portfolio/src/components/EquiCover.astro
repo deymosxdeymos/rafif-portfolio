@@ -1,0 +1,39 @@
+---
+import { Image } from "astro:assets";
+import landing from "../assets/equiteam/landing.png";
+import blue from "../assets/equiteam/m-blue-big.png";
+import green from "../assets/equiteam/m-green.png";
+
+interface Props {
+  class?: string;
+}
+const { class: cls = "" } = Astro.props;
+---
+
+<div class={`eq eq-dots relative isolate aspect-[4/3] overflow-hidden rounded-[28px] ring-1 ring-line ${cls}`} style="container-type: inline-size">
+  <svg class="absolute left-[18%] top-[2%] -z-10 w-[30cqw] text-[#fec84b]" viewBox="0 0 100 100" aria-hidden="true">
+    <path fill="currentColor" d="M50 0 61 37 100 30 68 55 85 100 50 72 15 100 32 55 0 30 39 37Z" />
+  </svg>
+  <p class="eq-title absolute inset-x-[5%] top-[7%] text-center text-[7.6cqw]">
+    Equi<span class="y">Team</span>
+  </p>
+  <p class="absolute inset-x-0 top-[21%] text-center text-[2cqw] font-semibold text-[#025098]">AI-powered team formation for fairer classrooms</p>
+
+  <div class="absolute left-1/2 top-[30%] w-[66%] -translate-x-1/2 rounded-[2.2cqw] bg-[#111] p-[1cqw] shadow-[0_3cqw_6cqw_-2cqw_rgb(2_80_152/0.45)]">
+    <Image src={landing} alt="EquiTeam landing page: Where Justice Creates Excellence" widths={[500, 880]} sizes="(min-width:1024px) 40vw, 90vw" class="block w-full rounded-[1.4cqw]" />
+  </div>
+
+  <div class="eq-window absolute left-[3%] top-[43%] w-[22cqw] p-[1.2cqw] text-[1.6cqw]" data-float="8">
+    <p class="font-semibold text-[#0b2a55]">How it works</p>
+    <div class="mt-[0.8cqw] flex justify-between gap-[0.6cqw] text-center text-[1.3cqw]">
+      <span class="flex-1 rounded-[0.6cqw] bg-[#efeaff] py-[0.8cqw]">✏️<br />Input</span>
+      <span class="flex-1 rounded-[0.6cqw] bg-[#fff4dc] py-[0.8cqw]">⚙️<br />AI</span>
+      <span class="flex-1 rounded-[0.6cqw] bg-[#e3f8ec] py-[0.8cqw]">👥<br />Team</span>
+    </div>
+  </div>
+
+  <Image src={blue} alt="" widths={[300]} class="absolute -bottom-[4%] -left-[2%] w-[24cqw]" />
+  <Image src={green} alt="" widths={[200]} class="absolute bottom-[14%] right-[4%] w-[13cqw] rotate-6" data-float="10" />
+
+  <span class="absolute right-[4%] top-[4%] rounded-full bg-white px-[1.6cqw] py-[0.6cqw] text-[1.7cqw] font-semibold text-[#025098] ring-1 ring-[#025098]/20">SUS 78 → 87.5</span>
+</div>

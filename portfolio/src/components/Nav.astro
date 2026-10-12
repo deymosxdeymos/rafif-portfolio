@@ -1,0 +1,59 @@
+---
+import { site } from "../data/site";
+const onCase = Astro.url.pathname.startsWith("/work/");
+const links = [
+  { href: "/#work", label: "Work" },
+  { href: "/#about", label: "About" },
+  { href: "/#contact", label: "Contact" },
+];
+---
+
+<header class="fixed inset-x-0 top-0 z-50 pt-3">
+  <nav
+    class="wrap flex items-center justify-between"
+    aria-label="Main"
+  >
+    <div class="flex items-center gap-2">
+    <a
+      href="/"
+      class="flex items-center gap-2 rounded-full bg-card/80 py-1.5 pl-1.5 pr-4 font-display text-sm font-extrabold tracking-tight shadow-[0_1px_0_rgb(0_0_0/0.04)] ring-1 ring-line backdrop-blur-md"
+    >
+      <span class="grid size-7 place-items-center rounded-full bg-ink text-[11px] text-lime">
+        {site.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+      </span>
+      <span class="hidden sm:inline">{site.name}</span>
+    </a>
+    {
+      onCase && (
+        <a href="/#work" class="btn btn-secondary btn-sm bg-card/80 text-sm backdrop-blur-md">
+          ← All work
+        </a>
+      )
+    }
+    </div>
+    <ul
+      class="flex items-center gap-1 rounded-full bg-card/80 p-1 text-sm ring-1 ring-line backdrop-blur-md"
+    >
+      {
+        links.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              class="block rounded-full px-3 py-2 font-medium text-muted transition-colors hover:bg-paper hover:text-ink sm:px-4"
+            >
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+      <li class="hidden sm:block">
+        <a
+          href={`mailto:${site.email}`}
+          class="btn btn-primary btn-sm"
+        >
+          Let's talk
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>

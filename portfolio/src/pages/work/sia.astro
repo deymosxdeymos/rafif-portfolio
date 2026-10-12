@@ -1,0 +1,360 @@
+---
+import { Image } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+import Sparkle from "../../components/Sparkle.astro";
+import Cursor from "../../components/Cursor.astro";
+import { site } from "../../data/site";
+import SiaFeatures from "../../components/SiaFeatures.astro";
+
+import dashboardProject from "../../assets/sia/dashboard-project.png";
+import moodboard from "../../assets/sia/moodboard.png";
+import wire1 from "../../assets/sia/wire-1.png";
+import wire2 from "../../assets/sia/wire-2.png";
+import wire3 from "../../assets/sia/wire-3.png";
+import colors from "../../assets/sia/ds-colors.png";
+
+const facts = [
+  { k: "Client", v: "Tata Data Global (TDG)" },
+  { k: "Role", v: "UI/UX Design, Requirements" },
+  { k: "Platform", v: "Web app, desktop-first" },
+  { k: "Tools", v: "Figma, Google Docs, draw.io" },
+];
+
+const stats = [
+  { n: "16", l: "modules specified" },
+  { n: "34", l: "functional requirements" },
+  { n: "4", l: "user roles" },
+  { n: "50+", l: "hi-fi frames" },
+];
+
+const roles = [
+  {
+    name: "Admin · Team TDG",
+    tone: "bg-ink text-paper",
+    does: "Creates projects, imports the General Ledger, posts adjustments and decides who sees what.",
+  },
+  {
+    name: "Tim KAP",
+    tone: "bg-violet text-white",
+    does: "The public accounting firm. Reviews the worksheet and records KAP (audit) adjustments.",
+  },
+  {
+    name: "Client",
+    tone: "bg-lime text-ink",
+    does: "The company being audited. Reads and exports approved reports, nothing more.",
+  },
+  {
+    name: "External Auditor",
+    tone: "bg-card text-ink ring-1 ring-line",
+    does: "Limited access to check the numbers and fill in the audit-result columns.",
+  },
+];
+
+// From the "Fitur" sheet: what each party can do once TDG grants access.
+const matrixCols = ["General Ledger", "Worksheet", "Journal", "Adj. TDG", "Income Stmt", "Balance Sheet", "Adj. KAP"];
+const matrix = [
+  { who: "Client", cells: Array(7).fill("read, export") },
+  { who: "KAP", cells: ["", "", "", "", "", "", "CRUD, export"] },
+  { who: "Bank", cells: ["", "", "", "", "", "", "read, export"] },
+  { who: "KPP (tax office)", cells: Array(7).fill("") },
+  { who: "Third party", cells: Array(7).fill("") },
+];
+
+const flow = [
+  { t: "General Ledger", d: "Import .xlsx, columns auto-classified" },
+  { t: "Worksheet", d: "Accounts auto-sorted, checked against GL" },
+  { t: "Adjustment", d: "TDG posts adjusting entries" },
+  { t: "KAP Adjustment", d: "Auditor entries, logged to audit trail" },
+  { t: "Reports", d: "Balance Sheet + Income Statement" },
+  { t: "PPh Badan", d: "Corporate tax report, then locked" },
+];
+---
+
+<Base brand={{ accent: "#252b37", accentSoft: "#e9eaeb", pop: "#d5d7da" }} title={`SIA case study | ${site.name}`} description="Case study: designing SIA, a web accounting and audit system for Tata Data Global.">
+  <!-- HERO -->
+  <section class="relative isolate overflow-hidden bg-[linear-gradient(180deg,#ece9f2_0%,#f6f5f1_70%)] pt-28 sm:pt-32">
+    <div class="wrap">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap gap-2">
+          <span class="pill bg-card ring-1 ring-line">UX / UI</span>
+          <span class="pill bg-card ring-1 ring-line">Research</span>
+          <span class="pill bg-card ring-1 ring-line">Requirements</span>
+        </div>
+        <span class="font-display font-bold text-muted">/2025</span>
+      </div>
+    </div>
+
+    <div class="relative mt-6">
+      <p
+        class="display pointer-events-none select-none text-center text-[clamp(9rem,42vw,34rem)] text-white [text-shadow:0_2px_40px_rgb(105_56_239/0.12)]"
+        aria-hidden="true"
+        data-parallax="120"
+      >
+        SIA
+      </p>
+
+      <div class="wrap relative -mt-[15vw] lg:-mt-[12vw]" data-reveal="0.2">
+        <div class="relative mx-auto max-w-4xl [perspective:1600px]">
+          <div class="origin-top [transform:rotateX(10deg)]">
+            <div class="rounded-[18px] bg-[#0a0d12] p-2 shadow-[0_60px_120px_-30px_rgb(37_43_55/0.55)] sm:p-3">
+              <Image
+                src={dashboardProject}
+                alt="SIA dashboard with a project's manage menu open"
+                widths={[800, 1440]}
+                sizes="(min-width: 1100px) 1024px, 92vw"
+                class="block w-full rounded-[10px]"
+                loading="eager"
+              />
+            </div>
+            <div class="mx-auto h-10 w-[16%] bg-gradient-to-b from-[#c9ccd3] to-[#8a8f9b] sm:h-16"></div>
+            <div class="mx-auto h-2 w-[30%] rounded-full bg-[#8a8f9b]"></div>
+          </div>
+
+          <span data-float="10" class="pill absolute -left-2 top-[10%] bg-lime px-4 py-2.5 text-sm font-semibold shadow-xl sm:-left-10">
+            <span class="size-2 rounded-full bg-ok"></span> Control to GL · TRUE
+          </span>
+          <span data-float="8" class="pill absolute -right-2 top-[30%] bg-card px-4 py-2.5 text-sm shadow-xl ring-1 ring-line sm:-right-12">
+            Meminta Akses → <b class="font-semibold text-ok">Approve</b>
+          </span>
+          <span data-float="12" class="pill absolute bottom-[30%] left-[6%] hidden bg-ink px-4 py-2.5 text-sm text-paper shadow-xl sm:inline-flex">
+            ↧ Export .xlsx
+          </span>
+          <Cursor label="Tim KAP" tone="violet" class="absolute right-[18%] top-[64%] hidden sm:flex" />
+          <Cursor label="Admin TDG" tone="ink" class="absolute left-[24%] top-[2%] hidden sm:flex" />
+          <Sparkle class="absolute -right-4 -top-8 size-10 text-violet" />
+          <Sparkle class="absolute right-6 -top-14 size-4 text-violet/50" />
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap relative mt-16 pb-20 sm:mt-20">
+      <h1 class="display max-w-4xl text-[clamp(2.75rem,7vw,6rem)]" data-reveal>
+        Sistem Informasi Akuntansi
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl" data-reveal="0.1">
+        One shared workspace for bookkeeping, audit adjustments and financial reports, built for
+        an accounting team that was emailing spreadsheets back and forth with auditors and clients.
+      </p>
+
+      <dl class="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-line ring-1 ring-line md:grid-cols-4" data-stagger>
+        {
+          facts.map((f) => (
+            <div class="bg-card p-5">
+              <dt class="eyebrow">{f.k}</dt>
+              <dd class="mt-2 font-medium">{f.v}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="bg-ink py-16 text-paper">
+    <ul class="wrap grid grid-cols-2 gap-y-10 md:grid-cols-4" data-stagger>
+      {
+        stats.map((s) => (
+          <li>
+            <p class="display text-[clamp(3.5rem,8vw,6rem)] text-lime">{s.n}</p>
+            <p class="mt-3 text-paper/65">{s.l}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="wrap grid gap-12 py-24 sm:py-32 lg:grid-cols-[1fr_1.3fr]">
+    <div>
+      <p class="eyebrow">01 · The problem</p>
+      <h2 class="h2 mt-4" data-reveal>Audits ran on spreadsheets and goodwill.</h2>
+    </div>
+    <div class="space-y-6 text-lg leading-relaxed text-muted" data-reveal="0.1">
+      <p>
+        TDG prepares the books for client companies, then a public accounting firm (KAP) audits
+        them. Every step lived in a spreadsheet: the General Ledger export, the worksheet
+        (<i>neraca lajur</i>), the adjustments, the final reports.
+      </p>
+      <ul class="space-y-3 text-base text-ink">
+        <li class="flex gap-3"><span class="mt-2 size-2 shrink-0 rounded-full bg-bad"></span>Files were copied between three organisations, so nobody was sure which version was current.</li>
+        <li class="flex gap-3"><span class="mt-2 size-2 shrink-0 rounded-full bg-bad"></span>Finding the journal that broke "debit = credit" meant scrolling thousands of rows by hand.</li>
+        <li class="flex gap-3"><span class="mt-2 size-2 shrink-0 rounded-full bg-bad"></span>Access was all-or-nothing: share the file and the client could see audit notes too.</li>
+        <li class="flex gap-3"><span class="mt-2 size-2 shrink-0 rounded-full bg-bad"></span>Auditor adjustments had no trail of who changed what, or when.</li>
+      </ul>
+      <div class="rounded-2xl bg-violet-soft p-6 text-ink">
+        <p class="eyebrow !text-violet">Goal</p>
+        <p class="mt-2 font-display text-xl font-bold tracking-tight">
+          Put the whole chain, from GL import to tax report, in one system where each role sees
+          exactly what it should, and every number can be traced back.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROLES -->
+  <section class="border-t border-line bg-card py-24 sm:py-32">
+    <div class="wrap">
+      <p class="eyebrow">02 · Who it's for</p>
+      <h2 class="h2 mt-4 max-w-3xl" data-reveal>Four roles, very different levels of trust.</h2>
+
+      <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-stagger>
+        {
+          roles.map((r) => (
+            <li class="flex flex-col rounded-3xl bg-paper p-6 ring-1 ring-line">
+              <span class={`pill w-fit ${r.tone}`}>{r.name}</span>
+              <p class="mt-6 text-muted">{r.does}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="mt-16" data-reveal>
+        <h3 class="font-display text-xl font-extrabold tracking-tight">Access once TDG grants it</h3>
+        <p class="mt-2 text-muted">Mapped with the team before any screen was drawn. Blank means no access.</p>
+        <div class="mt-6 overflow-x-auto rounded-2xl ring-1 ring-line">
+          <table class="w-full min-w-[760px] text-left text-sm">
+            <thead class="bg-paper">
+              <tr>
+                <th class="p-4 font-semibold">Party</th>
+                {matrixCols.map((c) => <th class="p-4 font-semibold">{c}</th>)}
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-line">
+              {
+                matrix.map((row) => (
+                  <tr>
+                    <th class="p-4 font-medium">{row.who}</th>
+                    {row.cells.map((c) => (
+                      <td class="p-4">
+                        {c ? (
+                          <span class={`pill ${c.startsWith("CRUD") ? "bg-violet text-white" : "bg-ok-soft text-ok"}`}>{c}</span>
+                        ) : (
+                          <span class="text-muted" aria-label="No access">—</span>
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLOW -->
+  <section class="wrap py-24 sm:py-32">
+    <p class="eyebrow">03 · How the numbers move</p>
+    <h2 class="h2 mt-4 max-w-3xl" data-reveal>One pipeline, from ledger to tax report.</h2>
+    <p class="mt-6 max-w-2xl text-lg text-muted" data-reveal="0.1">
+      I wrote the requirements (SRS) module by module, 16 in total, each with numbered specs like
+      <code class="rounded bg-card px-1.5 py-0.5 text-sm ring-1 ring-line">SRS.SIA.09.05</code>. This flow
+      is the backbone the whole UI hangs off.
+    </p>
+
+    <ol class="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-6" data-stagger>
+      {
+        flow.map((s, i) => (
+          <li class="relative flex flex-col rounded-3xl bg-card p-5 ring-1 ring-line">
+            <span class="font-display text-sm font-bold text-violet">{String(i + 1).padStart(2, "0")}</span>
+            <span class="mt-8 font-display text-lg font-extrabold leading-tight tracking-tight">{s.t}</span>
+            <span class="mt-2 text-sm text-muted">{s.d}</span>
+            {i < flow.length - 1 && (
+              <span class="absolute -right-3 top-1/2 z-10 hidden size-6 -translate-y-1/2 place-items-center rounded-full bg-lime text-xs lg:grid" aria-hidden="true">→</span>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="bg-ink py-24 text-paper sm:py-32">
+    <div class="wrap">
+      <p class="eyebrow !text-lime">04 · Process</p>
+      <h2 class="h2 mt-4 max-w-3xl" data-reveal>From moodboard to fifty-odd frames.</h2>
+
+      <div class="mt-14 grid gap-6 lg:grid-cols-2">
+        <figure data-reveal>
+          <Image src={moodboard} alt="Moodboard: a clean light dashboard with a sidebar and rounded cards" widths={[600, 1024]} sizes="(min-width:1024px) 50vw, 100vw" class="w-full rounded-2xl" />
+          <figcaption class="mt-4 text-paper/65"><b class="text-paper">Moodboard.</b> Light, card-based dashboards. Lots of air around dense data.</figcaption>
+        </figure>
+        <figure data-reveal="0.1">
+          <div class="grid grid-cols-3 gap-2 rounded-2xl bg-[#d9d9d9] p-2">
+            <Image src={wire1} alt="Sign-in wireframe" widths={[480]} class="w-full rounded-lg" />
+            <Image src={wire2} alt="Sign-up wireframe" widths={[480]} class="w-full rounded-lg" />
+            <Image src={wire3} alt="Choose role wireframe" widths={[480]} class="w-full rounded-lg" />
+          </div>
+          <figcaption class="mt-4 text-paper/65"><b class="text-paper">Wireframes.</b> Auth and role selection first, since roles drive everything after.</figcaption>
+        </figure>
+      </div>
+
+      <figure class="mt-6 grid gap-6 rounded-3xl bg-white/5 p-6 ring-1 ring-white/10 lg:grid-cols-[1fr_1.4fr] lg:p-10" data-reveal>
+        <div>
+          <p class="font-display text-2xl font-extrabold tracking-tight">Design system</p>
+          <p class="mt-3 text-paper/65">
+            Gray-first palette with a near-black brand colour, plus semantic error, warning and
+            success ramps, each swatch checked for contrast. Manrope for headings, Inter for the
+            numbers.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-2">
+            {["#0A0D12", "#252B37", "#414651", "#D5D7DA", "#F5F5F5"].map((c) => (
+              <span class="size-10 rounded-full ring-1 ring-white/20" style={`background:${c}`} title={c} />
+            ))}
+            {["#D92D20", "#F79009", "#12B76A"].map((c) => (
+              <span class="size-10 rounded-full" style={`background:${c}`} title={c} />
+            ))}
+          </div>
+          <div class="mt-8 flex items-end gap-6">
+            <span class="font-display text-6xl font-extrabold">Aa</span>
+            <span class="text-6xl">Aa</span>
+          </div>
+          <p class="mt-2 text-sm text-paper/65">Manrope · Inter</p>
+        </div>
+        <Image src={colors} alt="Colour tokens: gray, brand, error, warning, success and secondary ramps" widths={[800, 1400]} sizes="(min-width:1024px) 55vw, 100vw" class="w-full rounded-2xl bg-white" />
+      </figure>
+    </div>
+  </section>
+
+  <!-- KEY FEATURES -->
+  <SiaFeatures />
+
+  <!-- LEARNINGS -->
+  <section class="border-t border-line bg-card py-24 sm:py-32">
+    <div class="wrap grid gap-12 lg:grid-cols-[1fr_1.3fr]">
+      <div>
+        <p class="eyebrow">06 · Takeaways</p>
+        <h2 class="h2 mt-4" data-reveal>What I'd tell my past self.</h2>
+      </div>
+      <ol class="space-y-8" data-stagger>
+        <li>
+          <p class="font-display text-xl font-extrabold tracking-tight">Write the spec, then draw.</p>
+          <p class="mt-2 text-muted">Numbering every requirement made reviews with TDG fast. "Is 09.05 in?" beats "is the green thing done?"</p>
+        </li>
+        <li>
+          <p class="font-display text-xl font-extrabold tracking-tight">Permissions are a design problem.</p>
+          <p class="mt-2 text-muted">The access matrix shaped the sidebar, the empty states and the request flow more than any visual choice.</p>
+        </li>
+        <li>
+          <p class="font-display text-xl font-extrabold tracking-tight">Colour is for meaning in data UI.</p>
+          <p class="mt-2 text-muted">Keeping the chrome gray let orange (audit), green (control) and red (unbalanced) do real work.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- NEXT -->
+  <section class="wrap py-24">
+    <div class="flex flex-col items-start justify-between gap-8 rounded-[32px] bg-lime p-8 sm:flex-row sm:items-end sm:p-14" data-reveal>
+      <div>
+        <p class="eyebrow !text-ink/75">Thanks for reading</p>
+        <p class="display mt-4 text-[clamp(2.5rem,6vw,5rem)]">Want one of these<br />for your product?</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href="/work/teachtechai" class="btn btn-secondary">Next: TeachTechAI →</a>
+        <a href={`mailto:${site.email}`} class="btn btn-primary">Get in touch</a>
+      </div>
+    </div>
+  </section>
+</Base>
